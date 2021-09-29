@@ -16,6 +16,7 @@ import com.dullyoung.androidtest1.model.bean.CarInfo
 import com.dullyoung.androidtest1.model.bean.DetailInfo
 import com.dullyoung.androidtest1.model.bean.SubInfo
 import com.dullyoung.androidtest1.model.engine.DetailInfoEngine
+import com.dullyoung.androidtest1.utils.CommonUtils
 import com.dullyoung.androidtest1.view.acvitity.CarDetailActivity
 import com.dullyoung.androidtest1.view.adapter.CarInfoAdapter
 import com.dullyoung.androidtest1.view.adapter.SubAdapter
@@ -96,9 +97,7 @@ fun getUpdateAt(textView: TextView, detailInfo: DetailInfo?) {
     }
     val time: Long =
         if (detailInfo.updatedAt == null) 0L else detailInfo.updatedAt!!
-
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.US)
-    val text = "last update: ${dateFormat.format(time * 1000)}"
+    val text = "last update: ${CommonUtils.formatDate(time * 1000)}"
     textView.text = text
 }
 
