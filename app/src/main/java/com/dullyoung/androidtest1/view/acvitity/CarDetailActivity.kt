@@ -6,6 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -31,30 +33,40 @@ class CarDetailActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var binding: ActivityCarDetailBinding;
+    private lateinit var binding: ActivityCarDetailBinding
+    private lateinit var progressDialog: ProgressDialog
+    private lateinit var detailViewModel: DetailViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_car_detail)
         binding.ivBack.setOnClickListener { onBackPressed() }
+        binding.tvError.setOnClickListener { loadData() }
 
+        progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("loading...")
+        val type = intent.getStringExtra("type");
+        detailViewModel = ViewModelProvider(this).get(DetailViewModel::class.java);
+        binding.detailVM = detailViewModel
+        detailViewModel.detailInfo.observe(this, {
+            progressDialog.dismiss()
+            if (it == null) {
+                binding.clError.visibility = View.VISIBLE
+                binding.clRoot.visibility = View.GONE
+                Toast.makeText(this, "Request Error", Toast.LENGTH_SHORT).show()
+            } else {
+                it.country = type
+                binding.clRoot.visibility = View.VISIBLE
+                binding.clError.visibility = View.GONE
+            }
+        })
+        binding.lifecycleOwner = this
+        binding.setVariable(BR.country, type)
         loadData()
-
     }
 
     private fun loadData() {
-        val progressDialog = ProgressDialog(this)
-        progressDialog.actionBar?.title = "Loading..."
         progressDialog.show()
-        val type = intent.getStringExtra("type");
-        val detailViewModel = ViewModelProvider(this).get(DetailViewModel::class.java);
-        binding.detailVM = detailViewModel
-        detailViewModel.detailInfo.observe(this, {
-            it.country = type
-            binding.clRoot.visibility= View.VISIBLE
-            progressDialog.dismiss()
-        })
-        binding.lifecycleOwner = this
         detailViewModel.loadData()
-        binding.setVariable(BR.country, type)
     }
 }

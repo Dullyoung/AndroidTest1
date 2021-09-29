@@ -12,4 +12,5 @@
     <string name="enhance_your_subscription">Enhance your subscription</string>
     <string name="enhance_desp">Take away the hassle of car ownershipand enjoy full comfort and conveniencewith our concierge service.</string>
     <string name="concierge_service">Concierge Service</string>
+    <string name="request_error">Request error! \n  Please check your network and try again.</string>
 </resources>

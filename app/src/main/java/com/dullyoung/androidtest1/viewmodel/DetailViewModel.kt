@@ -41,7 +41,6 @@ open class DetailViewModel : ViewModel() {
         }
     }
 
-
 }
 
 @BindingAdapter("leftDate")
