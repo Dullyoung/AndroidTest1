@@ -39,6 +39,7 @@ open class DetailViewModel : ViewModel() {
             val engine = DetailInfoEngine()
             val info = engine.getInfo()
             detailInfo.value = info
+ 
         }
     }
 
