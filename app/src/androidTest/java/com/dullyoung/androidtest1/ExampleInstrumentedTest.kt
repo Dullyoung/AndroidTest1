@@ -8,12 +8,14 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasShortClassName
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.intent.rule.IntentsTestRule
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
@@ -69,6 +71,16 @@ class ExampleInstrumentedTest {
             )
         )
 
+        //for Singapore custom button is visibility ,so check it isDisplayed
+
+//        onView(
+//            allOf(
+//                withId(R.id.stv_custom),
+//                isDisplayed()
+//            )
+//        ).check(matches(isDisplayed()))
+
+
         //back
         onView(withId(R.id.iv_back))
             .perform(click())
@@ -84,6 +96,15 @@ class ExampleInstrumentedTest {
                 hasExtra("type", CarDetailActivity.CountryType.Thailand.type)
             )
         )
+
+        //for Thailand custom button is invisibility ,so check it doesNotExist
+        val textView = onView(
+            allOf(
+                withId(R.id.stv_custom),
+                isDisplayed()
+            )
+        )
+        textView.check(ViewAssertions.doesNotExist())
 
         //for error test
         intended(
@@ -101,7 +122,11 @@ class ExampleInstrumentedTest {
         MainScope().launch(Dispatchers.Main) {
             val engine = DetailInfoEngine()
             val info = engine.getInfo()
-            assert(info!=null)
+            val expectInfo =
+                "{\"data\":{\"id\":12,\"type\":\"subscription\",\"make\":\"Mazda\",\"model\":\"Mazda2\",\"carplate_number\":\"SLT5334G\",\"price\":\"1045.98\",\"start_time\":1587340800,\"end_time\":1589846400,\"next_billing_date\":1608307200,\"mileage\":null,\"total_outstanding_fine_count\":null,\"total_outstanding_fine_amount\":null,\"earliest_payment_due_date\":null,\"total_per_km_rate\":\"0.00\",\"days_left\":null,\"driven_this_month\":0,\"usage_due_this_month\":0,\"base_price\":null,\"road_tax\":682,\"insurance_excess\":2000,\"records\":[{\"key\":\"agreement-documents\",\"label\":\"Agreement Documents\"}],\"has_subscribed_insurance\":true,\"help\":[{\"key\":\"faq\",\"label\":\"FAQ\",\"value\":\"https:\\/\\/carro.sg\\/leap#faq\"},{\"key\":\"terms_and_conditions\",\"label\":\"Terms and conditions\",\"value\":\"https:\\/\\/carro.sg\\/leap\\/terms\"}],\"updated_at\":1597200772,\"drivers\":[{\"name\":\"Driver A\",\"phone\":\"90685298\",\"gender\":\"MALE\",\"id_number\":\"*****631Z\",\"driver_type\":\"MAIN_DRIVER\",\"date_of_birth\":324727300,\"marital_status\":\"MARRIED\",\"driving_experience\":\"10\",\"driving_license_number\":\"*****631Z\",\"driving_license_registration_date\":324727300}]},\"success\":{\"message\":\"Retrieve subscription vehicle successfully!\"}}"
+            assert(Gson().toJson(info).equals(expectInfo))
         }
     }
+
+
 }
